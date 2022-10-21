@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title id="pagetitle">cta</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+<body class="container">
+    <div id="subredditSelect">
+        <h1 id="title">r/</h1>
+        <input id="subreddit"type="text" onchange="enterSubreddit(event)" value="cats">    
+    </div>
+    <div id="images"></div>
+    <script>
+function imageload(subreddit){
+    document.getElementById("images").innerHTML = '';
+    document.getElementById("pagetitle").innerHTML = "r/"+subreddit;
+    $.getJSON('http://www.reddit.com/r/'+subreddit+'/hot.json?limit=100&t=week', function(data) {
+      $.each(data.data.children, function(i,item){
+        if(item.data.url.includes(".jpg")||item.data.url.includes(".png") || item.data.url.includes(".webp")){
+            if (item.data.url.includes("imgur") || item.data.over_18 == true){
+                return
+            }
+            else{
+                $("<img/>").attr("src", item.data.url).attr("onclick","copylink(this)").appendTo("#images");
+            }
+            } 
+      })
+    })
+}
+
+function enterSubreddit(){
+        randomimage(document.getElementById("subreddit").value)
+}
+
+$(document).ready( function() {
+  
+
+    imageload(document.getElementById("subreddit").value)
+
+  });
+
+function copylink(element){
+    var copyText = element.src;
+    navigator.clipboard.writeText(copyText);
+
+}
+
+
+    </script>
+
+<style>
+    .container{
+        background-color: black;
+    }
+    #images {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 50px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+    
+    #images video {
+        width: 100%;
+        align-self: center;
+        max-height: 300px;
+        min-height: 100px;
+        object-fit: cover;
+        transition: 0.15s;
+    }
+    
+    #images video:hover {
+        transform: scale(1.15);
+        cursor: pointer;
+    }
+    
+    #images img {
+        width: 100%;
+        align-self: center;
+        max-height: 300px;
+        min-height: 100px;
+        object-fit: cover;
+        transition: 0.15s;
+    }
+    
+    #images img:hover {
+        transform: scale(1.25);
+        cursor: pointer;
+    }
+    #title {
+        display: inline;
+        text-align: center; 
+        color: white; 
+        font-family: monospace; 
+        font-size: 40px;
+        margin-left: 10px;
+    }
+    #subreddit{
+        display: inline;
+        font-size: 40px;
+        background-color: transparent;
+        color: white;
+        font-family: monospace;
+        border-style: none;
+        text-decoration: underline;
+        width: 18vw;
+    }
+    #subredditSelect{
+        margin-top: 50px; 
+        margin-left: 20px;
+        background-color: #353434;
+        width: fit-content;
+        border-radius: 10px;
+    }
+    </style>
+</body>
+</html>
