@@ -1,2 +1,2 @@
 # SubredditImageViewer
-Small website to display images fetched from the reddit api 
+A website for viewing images from subreddits that uses Jquery to fetch from the reddit api 
